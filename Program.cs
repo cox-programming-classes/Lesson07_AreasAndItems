@@ -27,11 +27,11 @@ var goblin = StockCreatures.Goblin;
 
 // Somewhere for them to be.  Each thing goes into the GameData once, under its name.
 // TODO:  This is the long way around.  Builders can do this for us.
-gameData.TryAddItem(new Item("Tree", "A big tree.  It has a lot of leaves."));
+gameData.TryAdd(new Item("Tree", "A big tree.  It has a lot of leaves."));
 
 Console.WriteLine(gameData.GetItem("Tree")?.Examine() ?? "nothing to look at");
 
-gameData.TryAddArea(new Area("Forest")
+gameData.TryAdd(new Area("Forest")
 {
     Description = "A dark forest.  It has a lot of trees.",
     Items = ["Tree"]
