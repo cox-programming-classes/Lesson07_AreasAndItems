@@ -41,7 +41,7 @@ public record ItemBuilder
     /// <returns>The new item's Id, or null if it couldn't be added.</returns>
     public string? Build(GameData gameData)
     {
-        if (gameData.TryAddItem(_item))
+        if (gameData.TryAdd(_item))
             return _item.Id;
 
         return null;

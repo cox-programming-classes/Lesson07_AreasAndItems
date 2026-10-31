@@ -58,7 +58,7 @@ public record AreaBuilder
     /// <returns>The new area's name, or null if it couldn't be added.</returns>
     public string? Build(GameData gameData)
     {
-        if (gameData.TryAddArea(_area))
+        if (gameData.TryAdd(_area))
             return _area.Name;
 
         return null;

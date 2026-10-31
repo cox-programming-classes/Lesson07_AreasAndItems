@@ -30,9 +30,10 @@ public record GameData
     // TODO:  This is a very simple implementation.  It does not handle duplicates, and it does not handle errors.  It is just a starting point.
     //--------------------------------------------------------------
 
-    public bool TryAddArea(Area area) => Areas.TryAdd(area.Name, area);
-    public bool TryAddItem(Item item) => Items.TryAdd(item.Id, item);
-    public bool TryAddCreature(Creature creature) => Creatures.TryAdd(creature.Name, creature);
+    // Three methods named TryAdd.  They're Overloads:  C# picks one by the type you hand it.
+    public bool TryAdd(Area area) => Areas.TryAdd(area.Name, area);
+    public bool TryAdd(Item item) => Items.TryAdd(item.Id, item);
+    public bool TryAdd(Creature creature) => Creatures.TryAdd(creature.Name, creature);
 
     //--------------------------------------------------------------
     //  Methods for retrieving Areas, Items, and Creatures by their key.
