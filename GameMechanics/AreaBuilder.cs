@@ -2,7 +2,9 @@ namespace TheWorld.GameMechanics;
 
 public record AreaBuilder
 {
-    private Area _area = null!;
+    private string _name = string.Empty;
+    private string _description = string.Empty;
+    private IReadOnlyList<string> _items = [];
 
     private AreaBuilder() { }
 
@@ -11,18 +13,18 @@ public record AreaBuilder
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static AreaBuilder FromName(string name) => new() { _area = new Area(ValidateName(name)) };
+    public static AreaBuilder FromName(string name) => new() { _name = ValidateName(name) };
 
     /// <summary>
-    /// Start with a FROM method.  An area starts from an existing area, which is copied and modified.
+    /// Start with a FROM method.  An area starts from the parts of an existing area, which can then be changed.
     /// </summary>
-    public static AreaBuilder FromArea(Area area) => new() { _area = area };
+    public static AreaBuilder FromArea(Area area) => new() { _name = area.Name, _description = area.Description, _items = area.Items };
 
 
     /// <summary>
     /// TODO: Start with a FROM method.  An area starts from a JSON string, which is parsed and modified.
     /// </summary>
-    public static AreaBuilder FromJson(string json) => 
+    public static AreaBuilder FromJson(string json) =>
         throw new NotImplementedException("FromJson is not implemented yet.  It will be implemented in a future lesson.");
 
     /// <summary>
@@ -30,11 +32,8 @@ public record AreaBuilder
     /// </summary>
     /// <param name="description"></param>
     /// <returns></returns>
-    public AreaBuilder WithDescription(string description) => 
-        this with 
-        {
-            _area = _area with { Description = ValidateDescription(description) }
-        };
+    public AreaBuilder WithDescription(string description) =>
+        this with { _description = ValidateDescription(description) };
 
     /// <summary>
     /// TODO: We need to revisit CreatureBuilder so that they are added into the GameData!
@@ -45,11 +44,7 @@ public record AreaBuilder
     public AreaBuilder WithCreature(string creature) =>
         throw new NotImplementedException("WithCreature is not implemented yet.");
 
-    public AreaBuilder WithItem(string item) =>
-        this with
-        {
-            _area = _area with { Items = [.. _area.Items, item] }
-        };
+    public AreaBuilder WithItem(string item) => this with { _items = [.. _items, item] };
 
     /// <summary>
     /// Builds the area and adds it to the game data.
@@ -58,13 +53,14 @@ public record AreaBuilder
     /// <returns>The new area's name, or null if it couldn't be added.</returns>
     public string? Build(GameData gameData)
     {
-        if (gameData.TryAdd(_area))
-            return _area.Name;
+        var area = new Area(_name) { Description = _description, Items = _items };
+        if (gameData.TryAdd(area))
+            return area.Name;
 
         return null;
     }
-    
-    
+
+
     /// <summary>
     /// TODO:  Validate the name.  For now, just make sure it's not null or whitespace.
     /// </summary>

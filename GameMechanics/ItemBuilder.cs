@@ -2,7 +2,9 @@ namespace TheWorld.GameMechanics;
 
 public record ItemBuilder
 {
-    private Item _item = null!;
+    private string _name = string.Empty;
+    private string _description = string.Empty;
+    private string? _id;
 
     private ItemBuilder() { }
 
@@ -11,28 +13,24 @@ public record ItemBuilder
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static ItemBuilder FromName(string name) => new() { _item = new Item(name, string.Empty) };
+    public static ItemBuilder FromName(string name) => new() { _name = name };
 
     /// <summary>
-    /// Start with a FROM method.  An item starts from an existing item, which is copied and modified.
+    /// Start with a FROM method.  An item starts from the parts of an existing item, which can then be changed.
     /// </summary>
-    public static ItemBuilder FromItem(Item item) => new() { _item = item };
+    public static ItemBuilder FromItem(Item item) => new() { _name = item.Name, _description = item.Description };
 
     /// <summary>
     /// Gives the item its own key, so that two items can share a name.
     /// </summary>
-    public ItemBuilder WithId(string id) => this with { _item = _item with { Id = id } };
+    public ItemBuilder WithId(string id) => this with { _id = id };
 
     /// <summary>
     /// Adds a description to the item being built.  This is optional, but recommended.
     /// </summary>
     /// <param name="description"></param>
     /// <returns></returns>
-    public ItemBuilder WithDescription(string description) =>
-        this with
-        {
-            _item = _item with { Description = description }
-        };
+    public ItemBuilder WithDescription(string description) => this with { _description = description };
 
     /// <summary>
     /// Builds the item and adds it to the game data.
@@ -41,8 +39,9 @@ public record ItemBuilder
     /// <returns>The new item's Id, or null if it couldn't be added.</returns>
     public string? Build(GameData gameData)
     {
-        if (gameData.TryAdd(_item))
-            return _item.Id;
+        var item = new Item(_name, _description) { Id = _id ?? _name };
+        if (gameData.TryAdd(item))
+            return item.Id;
 
         return null;
     }
