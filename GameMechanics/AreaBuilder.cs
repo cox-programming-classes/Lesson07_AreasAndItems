@@ -13,7 +13,7 @@ public record AreaBuilder
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static AreaBuilder FromName(string name) => new() { _name = ValidateName(name) };
+    public static AreaBuilder FromName(string name) => new() { _name = Helpers.ValidateString(name, "The Void") };
 
     /// <summary>
     /// Start with a FROM method.  An area starts from the parts of an existing area, which can then be changed.
@@ -33,7 +33,7 @@ public record AreaBuilder
     /// <param name="description"></param>
     /// <returns></returns>
     public AreaBuilder WithDescription(string description) =>
-        this with { _description = ValidateDescription(description) };
+        this with { _description = Helpers.ValidateString(description, "A place of nothingness.") };
 
     /// <summary>
     /// TODO: We need to revisit CreatureBuilder so that they are added into the GameData!
@@ -59,29 +59,4 @@ public record AreaBuilder
 
         return null;
     }
-
-
-    /// <summary>
-    /// TODO:  Validate the name.  For now, just make sure it's not null or whitespace.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    private static string ValidateName(string name) =>
-        name switch
-        {
-            var n when string.IsNullOrWhiteSpace(n) => "The Void",
-            _ => name.Trim()
-        };
-
-    /// <summary>
-    /// TODO:  Validate the description.  For now, just make sure it's not null or whitespace.
-    /// </summary>
-    /// <param name="description"></param>
-    /// <returns></returns>
-    private static string ValidateDescription(string description) =>
-        description switch
-        {
-            var d when string.IsNullOrWhiteSpace(d) => "A place of nothingness.",
-            _ => description.Trim()
-        };
 }

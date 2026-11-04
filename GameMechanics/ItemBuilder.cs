@@ -13,7 +13,7 @@ public record ItemBuilder
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static ItemBuilder FromName(string name) => new() { _name = name };
+    public static ItemBuilder FromName(string name) => new() { _name = Helpers.ValidateString(name, "Thingamajig") };
 
     /// <summary>
     /// Start with a FROM method.  An item starts from the parts of an existing item, which can then be changed.
@@ -30,7 +30,7 @@ public record ItemBuilder
     /// </summary>
     /// <param name="description"></param>
     /// <returns></returns>
-    public ItemBuilder WithDescription(string description) => this with { _description = description };
+    public ItemBuilder WithDescription(string description) => this with { _description = Helpers.ValidateString(description, "An unremarkable object.") };
 
     /// <summary>
     /// Builds the item and adds it to the game data.
